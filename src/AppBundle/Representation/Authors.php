@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: bgarnier
  * Date: 27/02/2018
- * Time: 13:18
+ * Time: 16:13
  */
 
 namespace AppBundle\Representation;
@@ -11,10 +11,10 @@ namespace AppBundle\Representation;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use JMS\Serializer\Annotation\Type;
 
-class Articles
+class Authors
 {
     /**
-     * @Type("array<AppBundle\Entity\Article>")
+     * @Type("array<AppBundle\Entity\Author>")
      */
     public $data;
     public $meta;
@@ -23,7 +23,6 @@ class Articles
     {
         $this->data = $data;
         $this->addMeta('total_items', count($data));
-
     }
 
     public function addMeta($name, $value)
