@@ -80,6 +80,7 @@ fos_rest:
     format_listener:
         rules:
             - { path: '^/', priorities: ['json'], fallback_format: 'json' }
+    param_fetcher_listener: force
 # Pour eviter les conflits
 sensio_framework_extra:
     view: { annotations: true }

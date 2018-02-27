@@ -2,16 +2,20 @@
 
 namespace AppBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\View;
+
 use AppBundle\Entity\Article;
+use AppBundle\Representation\Articles;
+
+
+use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\Request\ParamFetcherInterface;
 
 
-class ArticleController extends Controller
+
+class ArticleController extends FOSRestController
 {
     /**
      * @Rest\Get(
@@ -41,6 +45,48 @@ class ArticleController extends Controller
         $em->persist($article);
         $em->flush();
 
-        return $article;
+        return $this->view($article, Response::HTTP_CREATED, ['Location' => $this->generateUrl('app_article_show', ['id' => $article->getId()])]);
     }
+
+    /**
+     * @Rest\Get("/articles", name="app_article_list")
+     * @Rest\QueryParam(
+     *     name="keyword",
+     *     requirements="[a-zA-Z0-9]",
+     *     nullable=true,
+     *     description="The keyword to search for."
+     * )
+     * @Rest\QueryParam(
+     *     name="order",
+     *     requirements="asc|desc",
+     *     default="asc",
+     *     description="Sort order (asc or desc)"
+     * )
+     * @Rest\QueryParam(
+     *     name="limit",
+     *     requirements="\d+",
+     *     default="3",
+     *     description="Max number of movies per page."
+     * )
+     * @Rest\QueryParam(
+     *     name="offset",
+     *     requirements="\d+",
+     *     default="5",
+     *     description="The pagination offset"
+     * )
+     * @Rest\View(populateDefaultVars=false)
+     */
+    public function listAction(ParamFetcherInterface $paramFetcher)
+    {
+        $pager = $this->getDoctrine()->getRepository('AppBundle:Article')->search(
+            $paramFetcher->get('keyword'),
+            $paramFetcher->get('order'),
+            $paramFetcher->get('limit'),
+            $paramFetcher->get('offset')
+        );
+
+        return new Articles($pager);
+    }
+
+
 }

@@ -9,10 +9,14 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * @ORM\Entity
  * @ORM\Table()
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\ArticleRepository")
+ * @ExclusionPolicy("all")
  */
 class Article
 {
@@ -20,16 +24,19 @@ class Article
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Expose
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Expose
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Expose
      */
     private $content;
 
