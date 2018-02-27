@@ -32,8 +32,7 @@ framework:
     assets: ~
     php_errors:
         log: true
-    serializer:
-        enabled: true
+
 # Twig Configuration
 twig:
     debug: '%kernel.debug%'
@@ -68,3 +67,21 @@ swiftmailer:
     username: '%mailer_user%'
     password: '%mailer_password%'
     spool: { type: memory }
+
+# FOS Rest bundle
+fos_rest:
+    body_converter:
+        enabled: true
+    view:
+        formats: { json: true, xml: false, rss: false }
+        view_response_listener: true
+    serializer:
+        serialize_null: true
+    format_listener:
+        rules:
+            - { path: '^/', priorities: ['json'], fallback_format: 'json' }
+# Pour eviter les conflits
+sensio_framework_extra:
+    view: { annotations: true }
+    router: { annotations: true }
+    request: { converters: true }

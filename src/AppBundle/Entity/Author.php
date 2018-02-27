@@ -5,7 +5,6 @@
  * Date: 27/02/2018
  * Time: 09:54
  */
-
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -14,7 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table()
- *
  */
 class Author
 {
@@ -26,7 +24,7 @@ class Author
     private $id;
 
     /**
-     * @ORM\Column
+     * @ORM\Column(type="string")
      */
     private $fullname;
 

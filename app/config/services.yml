@@ -37,3 +37,7 @@ services:
         class: AppBundle\Serializer\Listener\ArticleListener
         tags:
             - { name: jms_serializer.event_subscriber }
+
+    sensio_framework_extra.view.listener:
+        alias: Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener
+
