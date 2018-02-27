@@ -5,13 +5,14 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Article;
 use AppBundle\Representation\Articles;
-
+use AppBundle\Exception\ResourceValidationException;
 
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Request\ParamFetcherInterface;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 
 
@@ -36,10 +37,25 @@ class ArticleController extends FOSRestController
      *    name = "app_article_create"
      * )
      * @Rest\View(StatusCode = 201,populateDefaultVars=false)
-     * @ParamConverter("article", converter="fos_rest.request_body")
+     * @ParamConverter(
+     *     "article",
+     *     converter="fos_rest.request_body",
+     *     options={
+     *         "validator"={ "groups"="Create" }
+     *     }
+     * )
      */
-    public function createAction(Article $article)
+    public function createAction(Article $article, ConstraintViolationList $violations)
     {
+        if (count($violations)) {
+            $message = 'The JSON sent contains invalid data. Here are the errors you need to correct: ';
+            foreach ($violations as $violation) {
+                $message .= sprintf("Field %s: %s ", $violation->getPropertyPath(), $violation->getMessage());
+            }
+
+            throw new ResourceValidationException($message);
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         $em->persist($article);
