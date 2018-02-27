@@ -12,12 +12,25 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use Symfony\Component\Validator\Constraints as Assert;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 /**
  * @ORM\Entity
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ArticleRepository")
  * @ExclusionPolicy("all")
+ * @Hateoas\Relation(
+ *      "self",
+ *      href = @Hateoas\Route(
+ *          "app_article_show",
+ *          parameters = { "id" = "expr(object.getId())" },
+ *          absolute=true
+ *       )
+ * )
+ * @Hateoas\Relation(
+ *     "author",
+ *     embedded = @Hateoas\Embedded("expr(object.getAuthor())")
+ * )
  */
 class Article
 {
